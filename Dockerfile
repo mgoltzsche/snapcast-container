@@ -30,7 +30,9 @@ RUN apk add --update --no-cache avahi alsa-lib
 FROM snapcastdeps AS client
 RUN apk add --update --no-cache pulseaudio-utils
 COPY --from=clientbuild /snapcast/client/snapclient /usr/local/bin/snapclient
-RUN adduser -D -u 2342 snapclient audio
+RUN set -ex; \
+	adduser -D -u 2342 snapclient audio; \
+	ln -s /host/etc/asound.conf /etc/asound.conf
 USER snapclient:audio
 COPY snapclient.sh /
 RUN /snapclient.sh --version
@@ -50,9 +52,12 @@ ENV SNAPSERVER_ADDRESS=0.0.0.0 \
 	SNAPSERVER_CHUNK_MS=20 \
 	SNAPSERVER_BUFFER_MS=1000
 # TODO: use unprivileged user here - currently that doesn't work well with avahi
-#RUN adduser -D -H -u 4242 snapserver
-#RUN mkdir /data && chown snapserver:snapserver /data && chmod 2770 /data
-#USER snapserver:snapserver
+RUN adduser -D -H -u 4242 snapserver
+RUN set -ex; \
+	mkdir /data; \
+	chown snapserver:snapserver /data; \
+	chmod 2770 /data
+USER snapserver:snapserver
 COPY snapserver.sh /
 RUN /snapserver.sh --version && rm -rf /tmp/snapserver.conf
 ENTRYPOINT [ "/snapserver.sh" ]
