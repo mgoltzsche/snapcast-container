@@ -45,8 +45,17 @@ COPY --from=serverbuild /snapcast/server/snapserver /usr/local/bin/snapserver
 COPY --from=serverbuild /snapcast/server/etc/index.html /usr/share/snapserver/
 COPY --from=serverbuild /snapcast/server/etc/snapweb /usr/share/snapserver/snapweb
 COPY snapserver.conf /etc/snapserver.conf
-ENV SNAPSERVER_ADDRESS=0.0.0.0 \
+ENV 	SNAPSERVER_HTTP_ENABLED=true \
+	SNAPSERVER_HTTP_ADDRESS=0.0.0.0 \
+	SNAPSERVER_HTTP_PORT=1780 \
+    SNAPSERVER_RPC_ENABLED=true \
+	SNAPSERVER_RPC_ADDRESS=0.0.0.0 \
+	SNAPSERVER_RPC_PORT=1705 \
+	SNAPSERVER_STREAM_ADDRESS=0.0.0.0 \
+	SNAPSERVER_STREAM_PORT=1704 \
+	SNAPSERVER_DATA_DIR=/var/lib/snapserver \
 	SNAPSERVER_SOURCE=pipe:///snapserver/snapfifo?name=default&mode=read \
+	SNAPSERVER_SOURCE_CREATE_FIFO= \
 	SNAPSERVER_SAMPLEFORMAT=48000:16:2 \
 	SNAPSERVER_CODEC=flac \
 	SNAPSERVER_CHUNK_MS=20 \

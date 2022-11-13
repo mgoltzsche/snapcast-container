@@ -1,0 +1,24 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata: # kpt-merge: /data
+  name: data
+  annotations:
+    platforms: linux/arm64/v8,linux/amd64
+    internal.kpt.dev/upstream-identifier: 'skaffold|Config|default|data'
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+  - image: mgoltzsche/snapcast-server # kpt-set: ${image-name}
+    docker:
+      dockerfile: Dockerfile
+  - image: mgoltzsche/snapcast-client # kpt-set: ${client-image-name}
+    docker:
+      dockerfile: Dockerfile
+      target: client
+  local:
+    push: false
+manifests:
+  kustomize:
+    paths:
+    - ./deploy/default

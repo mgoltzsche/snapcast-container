@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # kpt-merge: /blueprint
+  name: snapcast # kpt-set: ${name}
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|blueprint'
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 300
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: webapp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: webapp
+    spec:
+      serviceAccountName: snapcast # kpt-set: ${name}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        fsGroup: 4242
+      #initContainers:
+      #- name: fifo-init
+      #  image: mgoltzsche/snapcast-server:latest # kpt-set: ${image-name}:${image-tag}
+      #  command:
+      #  - /bin/sh
+      #  - -c
+      #  - |
+      #    set -eu
+      #    echo Creating source fifo at /snapserver/snapfifo
+      #    mkfifo -m 640 /snapserver/snapfifo
+      #    echo Generating a bit noise to initialize snapserver
+      #    timeout 1 sh -c 'cat /dev/urandom > /snapserver/snapfifo' || true
+      #  volumeMounts:
+      #  - mountPath: /snapserver
+      #    name: fifo
+      containers:
+      - name: app
+        image: mgoltzsche/snapcast-server:latest # kpt-set: ${image-name}:${image-tag}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SNAPSERVER_SOURCE
+          value: pipe:///host/tmp/snapfifo?name=default&mode=read
+        - name: SNAPSERVER_SOURCE_CREATE_FIFO
+          value: /host/tmp/snapfifo
+        resources:
+          limits:
+            cpu: 200m
+            memory: 64Mi
+          requests:
+            cpu: 100m
+            memory: 32Mi
+        ports:
+        - containerPort: 1780 # kpt-set: ${port}
+        - containerPort: 1705
+        - containerPort: 1704
+        livenessProbe:
+          httpGet:
+            path: "/" # kpt-set: ${healthcheck}
+            port: 1780 # kpt-set: ${port}
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: "/" # kpt-set: ${healthcheck}
+            port: 1780 # kpt-set: ${port}
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 2
+          initialDelaySeconds: 1
+        securityContext:
+          runAsGroup: 4242
+          runAsUser: 4242
+        volumeMounts:
+        - name: host-tmp
+          mountPath: /host/tmp
+        - name: state
+          mountPath: /var/lib/snapserver
+      volumes:
+      - name: host-tmp
+        hostPath:
+          path: /tmp
+          type: Directory
+      - name: state
+        emptyDir: {}

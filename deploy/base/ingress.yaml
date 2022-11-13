@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: # kpt-merge: /blueprint
+  name: snapcast # kpt-set: ${name}
+  annotations:
+    kubemate.mgoltzsche.github.com/nav-title: "Snapcast" # kpt-set: ${title}
+    kubemate.mgoltzsche.github.com/rewrite-target: /
+    internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|blueprint'
+spec:
+  ingressClassName: kubemate
+  rules:
+  - http:
+      paths:
+      - path: /snapcast/ # kpt-set: /${name}/
+        pathType: Prefix
+        backend:
+          service:
+            name: snapcast # kpt-set: ${name}
+            port:
+              number: 1780 # kpt-set: ${port}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: # kpt-merge: /snapcast-rpc-stream
+  name: snapcast-rpc-stream # kpt-set: ${name}-rpc-stream
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|snapcast-rpc-stream'
+spec:
+  ingressClassName: kubemate
+  rules:
+  - http:
+      paths:
+      - path: /jsonrpc
+        pathType: Prefix
+        backend:
+          service:
+            name: snapcast # kpt-set: ${name}
+            port:
+              number: 1780 # kpt-set: ${port}
+      - path: /stream
+        pathType: Prefix
+        backend:
+          service:
+            name: snapcast # kpt-set: ${name}
+            port:
+              number: 1780 # kpt-set: ${port}

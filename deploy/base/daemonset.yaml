@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: # kpt-merge: /snapcast-speaker
+  name: snapcast-speaker # kpt-set: ${name}-speaker
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps|DaemonSet|default|snapcast-speaker'
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: speaker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: speaker
+    spec:
+      serviceAccountName: snapcast # kpt-set: ${name}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      restartPolicy: Always
+      containers:
+      - name: snapclient
+        image: mgoltzsche/snapcast-client:latest # kpt-set: ${client-image-name}:${client-image-tag}
+        env:
+        - name: SNAPCLIENT_K8S_SERVICE
+          value: snapcast
+        - name: SNAPCLIENT_K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        resources:
+          limits:
+            cpu: 200m
+            memory: 64Mi
+          requests:
+            cpu: 100m
+            memory: 32Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev-snd
+          mountPath: /dev/snd
+        - name: run
+          mountPath: /host/run
+        - name: etc
+          mountPath: /host/etc
+          readOnly: true
+      volumes:
+      - name: dev-snd
+        hostPath:
+          path: /dev/snd
+      - name: run
+        hostPath:
+          path: /run
+      - name: etc
+        hostPath:
+          path: /etc
