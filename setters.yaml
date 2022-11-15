@@ -8,11 +8,10 @@ metadata: # kpt-merge: /app-config
     config.kubernetes.io/local-config: "true"
     internal.kpt.dev/upstream-identifier: '|ConfigMap|default|app-config'
 data:
+  version: "0.0.0"
   name: snapcast
   title: Snapcast
-  image-name: mgoltzsche/snapcast-server
-  image-tag: latest
   port: 1780
   healthcheck: /
-  client-image-name: mgoltzsche/snapcast-client
-  client-image-tag: latest
+  image: ghcr.io/mgoltzsche/snapcast-server
+  client-image-name: ghcr.io/mgoltzsche/snapcast-client

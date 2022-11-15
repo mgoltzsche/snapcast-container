@@ -24,7 +24,7 @@ spec:
         fsGroup: 4242
       #initContainers:
       #- name: fifo-init
-      #  image: mgoltzsche/snapcast-server:latest # kpt-set: ${image-name}:${image-tag}
+      #  image: mgoltzsche/snapcast-server:latest # kpt-set: ${image}:${version}
       #  command:
       #  - /bin/sh
       #  - -c
@@ -39,7 +39,7 @@ spec:
       #    name: fifo
       containers:
       - name: app
-        image: mgoltzsche/snapcast-server:latest # kpt-set: ${image-name}:${image-tag}
+        image: ghcr.io/mgoltzsche/snapcast-server:0.0.0 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env:
         - name: SNAPSERVER_SOURCE

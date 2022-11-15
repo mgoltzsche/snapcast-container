@@ -3,19 +3,15 @@ kind: Config
 metadata: # kpt-merge: /data
   name: data
   annotations:
-    platforms: linux/arm64/v8,linux/amd64
     internal.kpt.dev/upstream-identifier: 'skaffold|Config|default|data'
+    kubemate.mgoltzsche.github.com/platforms: linux/arm64/v8,linux/amd64
 build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-  - image: mgoltzsche/snapcast-server # kpt-set: ${image-name}
+  - image: ghcr.io/mgoltzsche/snapcast-server # kpt-set: ${image}
     docker:
       dockerfile: Dockerfile
-  - image: mgoltzsche/snapcast-client # kpt-set: ${client-image-name}
-    docker:
-      dockerfile: Dockerfile
-      target: client
   local:
     push: false
 manifests:
