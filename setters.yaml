@@ -14,4 +14,4 @@ data:
   port: 1780
   healthcheck: /
   image: ghcr.io/mgoltzsche/snapcast-server
-  client-image-name: ghcr.io/mgoltzsche/snapcast-client
+  client-image: ghcr.io/mgoltzsche/snapcast-client
