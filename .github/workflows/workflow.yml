@@ -1,3 +1,7 @@
+# TODO: Make downstream projects apply changes within this file.
+# Currently this file must be listed within .kptignore since it is not a KRM file.
+# However, therefore changes within the upstream repo are not propagated down.
+
 name: Build
 on:
   push:
@@ -26,18 +30,14 @@ jobs:
     - name: Log into GitHub registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       if: github.ref == 'refs/heads/main'
-    - name: Push image and update tag in manifests if releasable commit exists
-      id: publish
-      run: make release-maybe
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
       if: github.ref == 'refs/heads/main'
-    - name: Create release
-      if: steps.publish.outputs.pushed
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: true
-        prerelease: true
+        semantic_version: 19
+        extra_plugins: |
+          @semantic-release/exec@6.0.3
+          @semantic-release/git@10.0.1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+

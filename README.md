@@ -8,8 +8,10 @@ To list the supported targets, run `make help`.
 
 ### Prerequisites
 
+* git
 * make
-* docker 1.20+
+* [docker 1.20+](https://docs.docker.com/engine/install/)
+* [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
 ### Build the application
 To build the application container image using [skaffold](https://skaffold.dev), run:
@@ -39,3 +41,7 @@ To apply blueprint updates to the application codebase, update the [kpt](https:/
 3. Before committing the changes, review them carefully and make manual changes if necessary.
 
 TL;DR: [Variant Constructor Pattern](https://kpt.dev/guides/variant-constructor-pattern)
+
+## Release
+
+The release process is driven by [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/), letting the CI pipeline generate a version and publish a release depending on the [commit messages](https://semantic-release.gitbook.io/semantic-release/#commit-message-format) on the `main` branch.

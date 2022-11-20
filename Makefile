@@ -7,7 +7,6 @@ KPT_PKG_UPDATE_STRATEGY ?= resource-merge
 SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold/v2:v2.0.0-beta1
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
-SVU_IMAGE ?= ghcr.io/caarlos0/svu:v1.9.0
 
 DOCKER ?= docker
 PLATFORM_ARCH = $(shell uname -m | sed -E 's!x86_64!amd64!')
@@ -69,61 +68,28 @@ help: ## Display this help.
 
 ##@ Release
 
-# TODO: align image tags, pin within manifests
-
 .PHONY: push-image
 push-image: REGISTRY ?= ghcr.io
 push-image: SKAFFOLD_OPTS += --push --platform=$(PLATFORMS) --default-repo=$(REGISTRY)
-push-image: render require-clean-worktree skaffold-build ## Build and push the multi-arch image(s).
+push-image: skaffold-build ## Build and push the multi-arch image(s).
 
 .PHONY: binfmt-config
 binfmt-config: ## Enable multi-arch support on the host.
 	$(DOCKER) run --rm --privileged multiarch/qemu-user-static:7.0.0-7 --reset -p yes
 
-.PHONY: release-maybe
-release-maybe: require-clean-worktree ## Publish a new release if there are releasable commits.
-	$(eval NEXT_VERSION = $(shell docker run --rm -v $$PWD:/tmp -w /tmp $(SVU_IMAGE) next --no-build || echo 0.0.0))
-	$(eval CURR_VERSION = $(shell docker run --rm -v $$PWD:/tmp -w /tmp $(SVU_IMAGE) current || echo 0.0.0))
-	@{ if [ "$(NEXT_VERSION)" = "$(CURR_VERSION)" ] && [ ! "$(NEXT_VERSION)" = 0.0.0 ]; then \
-		echo Skipping release since there are no release-worthy commits.; \
-	else \
-		make release VERSION="`echo $(NEXT_VERSION) | sed -E s/^v//`"; \
-	fi \
-	}
+.PHONY: prepare-release ## Build image, update version within manifests.
+prepare-release: require-clean-worktree manifest-image binfmt-config
+	make push-image VERSION=latest REGISTRY=$(REGISTRY) PLATFORMS=$(PLATFORMS)
 
 .PHONY: release
-release: ## Publish a new release with given VERSION [and DRY_RUN=true].
-	@{ \
-	set -eu; \
-	TMPDIR=`mktemp -d --suffix -kubemate-app-release`; \
-	STATUS=0; ( \
-	echo Releasing $$VERSION... && \
-	cp -r . $$TMPDIR && \
-	cd $$TMPDIR && \
-	([ -d .git ] || git init . >/dev/null) && \
-	(set -x && \
-	make manifest-image render && \
-	([ "`git config user.name`" ] || git config user.name github-actions) && \
-	git add . && \
-	git commit -m 'Release $(VERSION)' && \
-	git tag -a v$(VERSION) -m 'Release $(VERSION)') && \
-	export SKAFFOLD_OPTS='-t latest -t $(VERSION) --platform=$(PLATFORMS)' && \
-	([ "$(DRY_RUN)" = true ] && echo Skipping push && make image || ( \
-		make push-image && \
-		git push && \
-		git push --tags && \
-		echo pushed=true > $${GITHUB_OUTPUT:-/tmp/kubemate-app-release-fake-out} && \
-		cd "$(CURDIR)" && \
-		git pull --tags \
-	))) || STATUS=1; \
-	rm -rf $$TMPDIR; \
-	exit $$STATUS; \
-	}
+release: SKAFFOLD_OPTS=-t $(VERSION) --platform=$(PLATFORMS)
+release: require-clean-worktree binfmt-config push-image ## Build and push multi-arch image with given VERSION.
 
-release-test: ## Release dry run.
-	make release VERSION=dev DRY_RUN=true
+.PHONY: manifest-image
+manifest-image: set-version render
 
-manifest-image:
+.PHONY: set-version
+set-version:
 	@[ ! "$(VERSION)" = '' ] || (echo no VERSION specified >&2; false)
 	$(DOCKER) run --rm -v "$$PWD":/workdir -u "`id -u`:`id -g`" -e VERSION mikefarah/yq:4.29.2 -i '.data.version = env(VERSION)' setters.yaml
 
