@@ -12,7 +12,7 @@ build:
   - image: ghcr.io/mgoltzsche/snapcast-server # kpt-set: ${image}
     docker:
       dockerfile: Dockerfile
-  - image: mgoltzsche/snapcast-client # kpt-set: ${client-image}
+  - image: ghcr.io/mgoltzsche/snapcast-client # kpt-set: ${client-image}
     docker:
       dockerfile: Dockerfile
       target: client
