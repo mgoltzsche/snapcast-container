@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: DaemonSet
-metadata: # kpt-merge: /snapcast-speaker
-  name: snapcast-speaker # kpt-set: ${name}-speaker
+metadata: # kpt-merge: /snapcast-client
+  name: snapcast-client
   annotations:
-    internal.kpt.dev/upstream-identifier: 'apps|DaemonSet|default|snapcast-speaker'
+    internal.kpt.dev/upstream-identifier: 'apps|DaemonSet|default|snapcast-client'
 spec:
   selector:
     matchLabels:
@@ -13,7 +13,7 @@ spec:
       labels:
         app.kubernetes.io/component: speaker
     spec:
-      serviceAccountName: snapcast # kpt-set: ${name}
+      serviceAccountName: snapcast-client
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       restartPolicy: Always
