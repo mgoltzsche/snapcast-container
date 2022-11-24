@@ -22,7 +22,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata: # kpt-merge: /snapcast-rpc-stream
-  name: snapcast-rpc-stream # kpt-set: ${name}-rpc-stream
+  name: snapcast-rpc-stream
   annotations:
     internal.kpt.dev/upstream-identifier: 'networking.k8s.io|Ingress|default|snapcast-rpc-stream'
 spec:
@@ -34,13 +34,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: snapcast # kpt-set: ${name}
+            name: snapcast
             port:
-              number: 1780 # kpt-set: ${port}
+              number: 1780
       - path: /stream
         pathType: Prefix
         backend:
           service:
-            name: snapcast # kpt-set: ${name}
+            name: snapcast
             port:
-              number: 1780 # kpt-set: ${port}
+              number: 1780

@@ -6,5 +6,4 @@ resources:
 - serviceaccount.yaml
 - service.yaml
 - deployment.yaml
-- ingress.yaml
-- ../snapclient
+- ../snapclient-ingress
