@@ -18,6 +18,7 @@ build:
       target: client
   local:
     push: false
+    useBuildkit: true
 manifests:
   kustomize:
     paths:
