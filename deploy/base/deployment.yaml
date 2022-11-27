@@ -39,7 +39,7 @@ spec:
       #    name: fifo
       containers:
       - name: app
-        image: ghcr.io/mgoltzsche/snapcast-server:0.2.0 # kpt-set: ${image}:${version}
+        image: ghcr.io/mgoltzsche/snapcast-server:0.3.0 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env:
         - name: SNAPSERVER_SOURCE

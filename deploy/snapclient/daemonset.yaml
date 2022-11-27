@@ -19,7 +19,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: snapclient
-        image: ghcr.io/mgoltzsche/snapcast-client:0.2.0 # kpt-set: ${client-image}:${version}
+        image: ghcr.io/mgoltzsche/snapcast-client:0.3.0 # kpt-set: ${client-image}:${version}
         env:
         - name: SNAPCLIENT_K8S_SERVICE
           value: snapcast
