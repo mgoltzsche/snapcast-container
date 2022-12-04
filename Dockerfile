@@ -40,7 +40,7 @@ ENTRYPOINT [ "/snapclient.sh" ]
 
 # Create final server image
 FROM snapcastdeps AS server
-RUN apk add --update --no-cache soxr libvorbis opus flac gettext
+RUN apk add --update --no-cache sox soxr libvorbis opus flac gettext
 COPY --from=serverbuild /snapcast/server/snapserver /usr/local/bin/snapserver
 COPY --from=serverbuild /snapcast/server/etc/index.html /usr/share/snapserver/
 COPY --from=serverbuild /snapcast/server/etc/snapweb /usr/share/snapserver/snapweb
@@ -56,6 +56,7 @@ ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_DATA_DIR=/var/lib/snapserver \
 	SNAPSERVER_SOURCE=pipe:///snapserver/snapfifo?name=default&mode=read \
 	SNAPSERVER_SOURCE_CREATE_FIFO= \
+	SNAPSERVER_SOUND_TEST=false \
 	SNAPSERVER_SAMPLEFORMAT=48000:16:2 \
 	SNAPSERVER_CODEC=flac \
 	SNAPSERVER_CHUNK_MS=20 \

@@ -17,6 +17,7 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       restartPolicy: Always
+      terminationGracePeriodSeconds: 1
       containers:
       - name: snapclient
         image: ghcr.io/mgoltzsche/snapcast-client:0.3.2 # kpt-set: ${client-image}:${version}
@@ -36,6 +37,8 @@ spec:
             memory: 32Mi
         securityContext:
           privileged: true
+          runAsUser: 1000
+          runAsGroup: 1000
         volumeMounts:
         - name: dev-snd
           mountPath: /dev/snd
