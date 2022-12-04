@@ -20,7 +20,7 @@ build:
 manifests:
   kustomize:
     paths:
-    - ./deploy/dev
+    - ./deploy/default
 profiles:
 - name: release
   build:
