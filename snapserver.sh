@@ -18,7 +18,7 @@ if [ "$SNAPSERVER_SOURCE_CREATE_FIFO" ]; then
 	fi
 fi
 
-if [ "$SNAPSERVER_START_SOUND_ENABLED" ] && echo "$SNAPSERVER_SOURCE" | grep -Eq '^pipe://'; then
+if [ "$SNAPSERVER_START_SOUND_ENABLED" = true ] && echo "$SNAPSERVER_SOURCE" | grep -Eq '^pipe://'; then
 	(
 		sleep 3
 		echo Playing start sound
