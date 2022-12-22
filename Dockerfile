@@ -36,6 +36,7 @@ RUN set -ex; \
 USER snapclient:audio
 COPY snapclient.sh /
 RUN /snapclient.sh --version
+COPY asound.conf /etc/asound.conf
 ENTRYPOINT [ "/snapclient.sh" ]
 
 # Create final server image
