@@ -37,20 +37,15 @@ spec:
             memory: 32Mi
         securityContext:
           privileged: true
-          runAsUser: 1000
-          runAsGroup: 1000
+          runAsUser: 0
+          runAsGroup: 0
         volumeMounts:
-        - name: dev-snd
-          mountPath: /dev/snd
         - name: run
           mountPath: /host/run
         - name: etc
           mountPath: /host/etc
           readOnly: true
       volumes:
-      - name: dev-snd
-        hostPath:
-          path: /dev/snd
       - name: run
         hostPath:
           path: /run

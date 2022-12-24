@@ -2,6 +2,15 @@
 
 set -eu
 
+findPulseaudioUser() {
+	for uid in `ls /host/run/user 2>/dev/null || true`; do
+		if [ -S "/host/run/user/${uid}/pulse/native" ]; then
+			echo $uid
+			return 0
+		fi
+	done
+}
+
 if [ "${SNAPCLIENT_HOST:-}" ]; then
 	SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --host $SNAPCLIENT_HOST"
 elif [ "${SNAPCLIENT_K8S_NAMESPACE:-}" -a "${SNAPCLIENT_K8S_SERVICE:-}" ]; then
@@ -36,8 +45,13 @@ fi
 if [ "${SNAPCLIENT_PLAYER:-}" ]; then
 	SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --player $SNAPCLIENT_PLAYER"
 else
-	PULSEAUDIO_UNIX_SOCKET="/host/run/user/$(id -u)/pulse/native"
-	if [ -S "$PULSEAUDIO_UNIX_SOCKET" ]; then
+	PULSEAUDIO_USER="`findPulseaudioUser`"
+	if [ "$PULSEAUDIO_USER" ]; then
+		if [ ! "$PULSEAUDIO_USER" = "`id -u`" ]; then
+			exec su-exec $PULSEAUDIO_USER:$PULSEAUDIO_USER "$0" "$@"
+			exit $?
+		fi
+		PULSEAUDIO_UNIX_SOCKET="/host/run/user/${PULSEAUDIO_USER}/pulse/native"
 		SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --player pulse:server=unix:$PULSEAUDIO_UNIX_SOCKET"
 	fi
 fi

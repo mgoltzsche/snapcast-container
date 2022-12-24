@@ -28,7 +28,7 @@ RUN apk add --update --no-cache avahi alsa-lib
 
 # Create final client image
 FROM snapcastdeps AS client
-RUN apk add --update --no-cache pulseaudio-utils
+RUN apk add --update --no-cache pulseaudio-utils su-exec
 COPY --from=clientbuild /snapcast/client/snapclient /usr/local/bin/snapclient
 RUN set -ex; \
 	adduser -D -u 2342 snapclient audio; \
@@ -49,7 +49,7 @@ COPY snapserver.conf /etc/snapserver.conf
 ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_HTTP_ADDRESS=0.0.0.0 \
 	SNAPSERVER_HTTP_PORT=1780 \
-    SNAPSERVER_RPC_ENABLED=true \
+	SNAPSERVER_RPC_ENABLED=true \
 	SNAPSERVER_RPC_ADDRESS=0.0.0.0 \
 	SNAPSERVER_RPC_PORT=1705 \
 	SNAPSERVER_STREAM_ADDRESS=0.0.0.0 \
