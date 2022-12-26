@@ -1,29 +1,22 @@
-FROM alpine:3.14 AS alpine
+FROM alpine:3.17 AS alpine
 
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
-ARG SNAPCAST_VERSION=v0.25.0
+ARG SNAPCAST_VERSION=v0.26.0
 RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git /snapcast
 
 # Build server
 FROM builddeps AS serverbuild
 WORKDIR /snapcast/server
-#RUN make snapserver.o server.o config.o control_server.o control_session_tcp.o control_session_http.o control_session_ws.o stream_server.o stream_session.o stream_session_tcp.o stream_session_ws.o streamreader/stream_uri.o streamreader/base64.o streamreader/stream_manager.o streamreader/pcm_stream.o streamreader/posix_stream.o streamreader/pipe_stream.o streamreader/file_stream.o streamreader/tcp_stream.o streamreader/process_stream.o streamreader/airplay_stream.o streamreader/meta_stream.o streamreader/librespot_stream.o streamreader/watchdog.o encoder/encoder_factory.o encoder/flac_encoder.o encoder/opus_encoder.o encoder/pcm_encoder.o encoder/null_encoder.o encoder/ogg_encoder.o ../common/sample_format.o ../common/resampler.o
-#RUN make LDFLAGS="-s -w -static"
 RUN make
-RUN sed -Ei 's!^source = .*!source = pipe:///tmp/snapcast/snapfifo?name=default\&mode=read!' etc/snapserver.conf
-#RUN cp /snapcast/server/snapserver /usr/local/bin/snapserver
 
 # Build client
 FROM builddeps AS clientbuild
 WORKDIR /snapcast/client
-#RUN echo > player/pulse_player.hpp
-#RUN echo > player/pulse_player.cpp
-#RUN sed -Ei 's/ -DHAS_PULSE / /g; s/ -lpulse / /g' Makefile
 RUN make
 
 
-FROM alpine AS snapcastdeps
+FROM alpine:3.17 AS snapcastdeps
 RUN apk add --update --no-cache avahi alsa-lib
 
 # Create final client image
