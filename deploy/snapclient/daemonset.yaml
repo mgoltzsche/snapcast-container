@@ -14,8 +14,7 @@ spec:
         app.kubernetes.io/component: speaker
     spec:
       serviceAccountName: snapcast-client
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 1
       containers:
@@ -38,14 +37,20 @@ spec:
         securityContext:
           privileged: true
           runAsUser: 0
-          runAsGroup: 0
+          runAsGroup: 29
         volumeMounts:
+        - name: dev-snd
+          mountPath: /dev/snd
         - name: run
           mountPath: /host/run
         - name: etc
           mountPath: /host/etc
           readOnly: true
       volumes:
+      - name: dev-snd
+        hostPath:
+          path: /dev/snd
+          type: Directory
       - name: run
         hostPath:
           path: /run
