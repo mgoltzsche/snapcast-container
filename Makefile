@@ -2,7 +2,7 @@
 # This file is maintained within the upstream kpt package (see Kptfile).
 # Committing manual changes to this file, disables blueprint updates.
 
-KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.21
+KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.24
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
 SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.0.2
 SKAFFOLD_OPTS ?=
@@ -51,6 +51,7 @@ kpt-pkg-update:
 skaffold-debug skaffold-dev: DOCKER_RUN_OPTS = -ti
 skaffold-debug skaffold-dev skaffold-run skaffold-stop skaffold-delete: DOCKER_RUN_OPTS += --mount "type=bind,src=$(KUBECONFIG),dst=/tmp/.kube/config,ro"
 skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-debug skaffold-survey skaffold-help: skaffold-%:
+	mkdir -p $$HOME/.docker
 	$(DOCKER) run $(DOCKER_RUN_OPTS) --rm -v "`pwd`:/workspace" -w /workspace --network=host \
 		-v "/var/run/docker.sock:/var/run/docker.sock" \
 		--mount "type=bind,src=$$HOME/.docker,dst=/tmp/.docker" \

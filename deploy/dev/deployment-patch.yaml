@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
+metadata: # kpt-merge: /snapcast
   name: snapcast # kpt-set: ${name}
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|snapcast'
 spec:
   template:
     spec:
