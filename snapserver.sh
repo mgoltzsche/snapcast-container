@@ -8,8 +8,8 @@ envsubst "$(set | grep -Eo '^SNAPSERVER_[^=]+' | sed 's/^/$/')" < /etc/snapserve
 if [ "$SNAPSERVER_SOURCE_CREATE_FIFO" ]; then
 	echo "Creating snapserver source fifo at $SNAPSERVER_SOURCE_CREATE_FIFO"
 	[ -p "$SNAPSERVER_SOURCE_CREATE_FIFO" ] || mkfifo -m 640 "$SNAPSERVER_SOURCE_CREATE_FIFO"
-	echo Generating a bit noise to initialize snapserver
 	if [ "$SNAPSERVER_SOUND_TEST" = true ]; then
+		echo Playing test sound continuously
 		sox -V -r 48000 -n -b 16 -c 2 /tmp/testsound.wav synth 30 sin 0+19000 sin 1000+20000 vol -10db remix 1,2 channels 2
 		while true; do
 			cat /tmp/testsound.wav > "$SNAPSERVER_SOURCE_CREATE_FIFO"
