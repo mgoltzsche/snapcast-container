@@ -8,6 +8,10 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: speaker
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "100%"
   template:
     metadata:
       labels:
