@@ -2,7 +2,7 @@ FROM alpine:3.17 AS alpine
 
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
-ARG SNAPCAST_VERSION=v0.26.0
+ARG SNAPCAST_VERSION=v0.27.0
 RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git /snapcast
 
 # Build server
@@ -55,7 +55,8 @@ ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_SAMPLEFORMAT=48000:16:2 \
 	SNAPSERVER_CODEC=flac \
 	SNAPSERVER_CHUNK_MS=20 \
-	SNAPSERVER_BUFFER_MS=1000
+	SNAPSERVER_BUFFER_MS=1000 \
+	SNAPSERVER_INITIAL_VOLUME=30
 # TODO: use unprivileged user here - currently that doesn't work well with avahi
 RUN adduser -D -H -u 4242 snapserver
 RUN set -ex; \
