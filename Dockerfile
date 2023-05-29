@@ -1,4 +1,4 @@
-FROM alpine:3.17 AS alpine
+FROM alpine:3.18 AS alpine
 
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
@@ -16,12 +16,12 @@ WORKDIR /snapcast/client
 RUN make
 
 
-FROM alpine:3.17 AS snapcastdeps
+FROM alpine:3.18 AS snapcastdeps
 RUN apk add --update --no-cache avahi alsa-lib
 
 # Create final client image
 FROM snapcastdeps AS client
-RUN apk add --update --no-cache pulseaudio-utils su-exec
+RUN apk add --update --no-cache su-exec pulseaudio-utils alsa-utils
 COPY --from=clientbuild /snapcast/client/snapclient /usr/local/bin/snapclient
 RUN set -ex; \
 	adduser -D -u 2342 snapclient audio; \

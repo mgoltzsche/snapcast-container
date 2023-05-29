@@ -53,6 +53,9 @@ else
 		fi
 		PULSEAUDIO_UNIX_SOCKET="/host/run/user/${PULSEAUDIO_USER}/pulse/native"
 		SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --player pulse:server=unix:$PULSEAUDIO_UNIX_SOCKET"
+	elif amixer | grep -q "Simple mixer control 'Digital'"; then
+		# Default to hardware mixer if available
+		: ${SNAPCLIENT_MIXER:=hardware:Digital}
 	fi
 fi
 
