@@ -36,6 +36,7 @@ jobs:
       uses: mgoltzsche/conventional-release@v0
       with:
         commit-files: deploy setters.yaml
+        ignore-commits-before: 31ba691532914543623b38cab640e64ab1a77d29
 
     - name: Set up qemu
       uses: docker/setup-qemu-action@v3
