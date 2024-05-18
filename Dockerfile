@@ -1,9 +1,11 @@
-FROM alpine:3.18 AS alpine
+FROM alpine:3.19 AS alpine
 
 FROM alpine AS builddeps
-RUN apk add --update --no-cache git make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
-ARG SNAPCAST_VERSION=v0.27.0
+RUN apk add --update --no-cache git cmake make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
+ARG SNAPCAST_VERSION=v0.28.0
 RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git /snapcast
+WORKDIR /snapcast
+RUN cmake .
 
 # Build server
 FROM builddeps AS serverbuild
@@ -16,13 +18,13 @@ WORKDIR /snapcast/client
 RUN make
 
 
-FROM alpine:3.18 AS snapcastdeps
-RUN apk add --update --no-cache avahi alsa-lib
+FROM alpine:3.19 AS snapcastdeps
+RUN apk add --update --no-cache avahi alsa-lib libstdc++ libgcc
 
 # Create final client image
 FROM snapcastdeps AS client
 RUN apk add --update --no-cache su-exec pulseaudio-utils alsa-utils
-COPY --from=clientbuild /snapcast/client/snapclient /usr/local/bin/snapclient
+COPY --from=clientbuild /snapcast/bin/snapclient /usr/local/bin/snapclient
 RUN set -ex; \
 	adduser -D -u 2342 snapclient audio; \
 	ln -s /host/etc/asound.conf /etc/asound.conf
@@ -35,7 +37,7 @@ ENTRYPOINT [ "/snapclient.sh" ]
 # Create final server image
 FROM snapcastdeps AS server
 RUN apk add --update --no-cache sox soxr libvorbis opus flac gettext
-COPY --from=serverbuild /snapcast/server/snapserver /usr/local/bin/snapserver
+COPY --from=serverbuild /snapcast/bin/snapserver /usr/local/bin/snapserver
 COPY --from=serverbuild /snapcast/server/etc/index.html /usr/share/snapserver/
 COPY --from=serverbuild /snapcast/server/etc/snapweb /usr/share/snapserver/snapweb
 COPY snapserver.conf /etc/snapserver.conf
