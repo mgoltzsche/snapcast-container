@@ -17,6 +17,24 @@ FROM builddeps AS clientbuild
 WORKDIR /snapcast/client
 RUN make
 
+# Build snapweb
+FROM node:22.2-alpine AS snapweb
+RUN apk add --update --no-cache git
+# TODO: use pre-built assets once patch is released: https://github.com/badaix/snapweb/pull/84
+# snapweb v0.7.0 + base URL patch
+ARG SNAPWEB_VERSION=ce7be22a186728f58ae257b4a88072f7c1118185
+RUN set -ex; \
+	git clone -c 'advice.detachedHead=false' https://github.com/mgoltzsche/snapweb.git /snapweb; \
+	cd /snapweb; \
+	git checkout $SNAPWEB_VERSION
+#RUN apk add --update --no-cache unzip
+#RUN set -ex; \
+#	wget -O /tmp/snapweb.zip https://github.com/badaix/snapweb/releases/download/$SNAPWEB_VERSION/snapweb.zip; \
+#	unzip /tmp/snapweb.zip -d /snapweb
+WORKDIR /snapweb
+RUN set -ex; \
+	npm ci; \
+	npm run build
 
 FROM alpine:3.19 AS snapcastdeps
 RUN apk add --update --no-cache avahi alsa-lib libstdc++ libgcc
@@ -38,8 +56,7 @@ ENTRYPOINT [ "/snapclient.sh" ]
 FROM snapcastdeps AS server
 RUN apk add --update --no-cache sox soxr libvorbis opus flac gettext
 COPY --from=serverbuild /snapcast/bin/snapserver /usr/local/bin/snapserver
-COPY --from=serverbuild /snapcast/server/etc/index.html /usr/share/snapserver/
-COPY --from=serverbuild /snapcast/server/etc/snapweb /usr/share/snapserver/snapweb
+COPY --from=snapweb /snapweb/dist /usr/share/snapserver/snapweb
 COPY snapserver.conf /etc/snapserver.conf
 ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_HTTP_ADDRESS=0.0.0.0 \
@@ -57,7 +74,7 @@ ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_SAMPLEFORMAT=48000:16:2 \
 	SNAPSERVER_CODEC=flac \
 	SNAPSERVER_CHUNK_MS=20 \
-	SNAPSERVER_BUFFER_MS=1000 \
+	SNAPSERVER_BUFFER_MS=700 \
 	SNAPSERVER_INITIAL_VOLUME=30
 # TODO: use unprivileged user here - currently that doesn't work well with avahi
 RUN adduser -D -H -u 4242 snapserver
