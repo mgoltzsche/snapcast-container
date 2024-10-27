@@ -2,7 +2,7 @@ FROM alpine:3.19 AS alpine
 
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git cmake make bash gcc g++ musl-dev avahi-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
-ARG SNAPCAST_VERSION=v0.28.0
+ARG SNAPCAST_VERSION=v0.29.0
 RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git /snapcast
 WORKDIR /snapcast
 RUN cmake .
