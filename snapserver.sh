@@ -3,8 +3,28 @@
 set | grep -E '^SNAPSERVER_'
 set -eu
 
+sourceName() {
+	echo "$1" | grep -Eo '(\?|&)name=[^&]+' | sed -E 's/(\?|&)name=//'
+}
+
+# Generate source config
+if [ ! "${SNAPSERVER_SOURCE_CONFIG:-}" ]; then
+	SNAPSERVER_SOURCE_CONFIG="source = $SNAPSERVER_SOURCE"
+	if [ "${SNAPSERVER_SOURCE_LIBRESPOT_ENABLED:-true}" = true ]; then
+		# TODO: limit librespot cache storage size
+		# TODO: remove codec=null to allow selecting sources separately, once the meta source can be default, see https://github.com/badaix/snapcast/issues/1316
+		SNAPSERVER_SOURCE_CONFIG="$SNAPSERVER_SOURCE_CONFIG&codec=null
+source = librespot:///usr/local/bin/librespot?name=LibreSpot&bitrate=320&sampleformat=44100:16:2&devicename=Snapcast&normalize=true&autoplay=true&killall=true&cache=/tmp/librespot-cache&codec=null
+source = meta:///$(sourceName "$SNAPSERVER_SOURCE")/LibreSpot?name=mix
+"
+	fi
+	export SNAPSERVER_SOURCE_CONFIG
+fi
+
+# Generate snapserver config file
 envsubst "$(set | grep -Eo '^SNAPSERVER_[^=]+' | sed 's/^/$/')" < /etc/snapserver.conf > /tmp/snapserver.conf
 
+# Create fifo
 if [ "$SNAPSERVER_SOURCE_CREATE_FIFO" ]; then
 	echo "Creating snapserver source fifo at $SNAPSERVER_SOURCE_CREATE_FIFO"
 	[ -p "$SNAPSERVER_SOURCE_CREATE_FIFO" ] || mkfifo -m 640 "$SNAPSERVER_SOURCE_CREATE_FIFO"
@@ -18,11 +38,12 @@ if [ "$SNAPSERVER_SOURCE_CREATE_FIFO" ]; then
 	fi
 fi
 
+# Play start sound
 if [ "$SNAPSERVER_START_SOUND_ENABLED" = true ] && echo "$SNAPSERVER_SOURCE" | grep -Eq '^pipe://'; then
 	(
 		sleep 3
 		echo Playing start sound
-		FIFO="$(echo "$SNAPSERVER_SOURCE" | sed -E 's!^pipe://!!; s!\?.*$!!')" &&
+		FIFO="$(echo "$SNAPSERVER_SOURCE" | grep -Em1 '^pipe://' | sed -E 's!^pipe://!!; s!\?.*$!!')" &&
 		sox -V -r 48000 -n -b 16 -c 2 /tmp/start.wav synth 3 sin 0+15000 sin 1000+80000 vol -10db remix 1,2 channels 2 &&
 		cat /tmp/start.wav > "$FIFO"
 	) &

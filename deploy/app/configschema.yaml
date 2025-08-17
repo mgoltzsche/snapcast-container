@@ -1,0 +1,40 @@
+apiVersion: apps.kubemate.mgoltzsche.github.com/v1alpha1
+kind: AppConfigSchema
+metadata: # kpt-merge: /${APP_NAME:=app}
+  name: ${APP_NAME:=app}
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps.kubemate.mgoltzsche.github.com|AppConfigSchema|default|${APP_NAME:=app}'
+spec:
+  params:
+  - name: SNAPSERVER_BUFFER_MS
+    title: Buffer size (ms)
+    type: number
+    category: Snapcast
+    description: The end-to-end latency, from capturing a sample on the server until the sample is played-out on the client.
+  - name: SNAPSERVER_CODEC
+    title: Codec
+    type: string
+    category: Snapcast
+    description: |
+      The codec used to transport the audio data to clients.
+      Supported values are flac, ogg, opus, pcm.
+  - name: SNAPSERVER_INITIAL_VOLUME
+    title: Default volume
+    type: number
+    category: Snapcast
+    description: The initial volume for new Snapcast clients.
+  - name: SNAPSERVER_SOURCE_LIBRESPOT_ENABLED
+    title: Enable LibreSpot
+    type: boolean
+    category: Snapcast
+    description: Enable the Spotify Connect server LibreSpot.
+  - name: SNAPSERVER_SOURCE
+    title: Snapserver source
+    type: string
+    category: Snapcast
+    description: |
+      Snapserver source URI.
+      Examples:
+      * Run a TCP server: tcp://0.0.0.0:1234?name=TCP
+      * Run a TCP client: tcp://mopidy:1234?name=Mopidy&mode=client
+      For more information, see https://github.com/badaix/snapcast/blob/master/doc/configuration.md#sources

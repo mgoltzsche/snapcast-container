@@ -1,5 +1,19 @@
 FROM alpine:3.22 AS alpine
 
+# Build librespot
+FROM rust:1.89-alpine3.22 AS librespot
+RUN apk add --update --no-cache git musl-dev
+#ARG LIBRESPOT_VERSION=v0.6.0
+# Librespot 0.6.0 + patch for breaking spotify change, see https://github.com/librespot-org/librespot/issues/1527#issuecomment-3172534956
+ARG LIBRESPOT_VERSION=03bcdc6bda5f7e2a6c21c3a1576ef00b21ca469c
+RUN set -ex; \
+	git clone -c 'advice.detachedHead=false' https://github.com/librespot-org/librespot; \
+	cd librespot; \
+	git checkout $LIBRESPOT_VERSION
+WORKDIR /librespot
+ENV RUSTFLAGS='-C link-arg=-s'
+RUN cargo build --release --no-default-features --features=with-libmdns
+
 # Install build dependencies
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git cmake make bash gcc g++ musl-dev avahi-dev openssl-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
@@ -45,6 +59,7 @@ ENTRYPOINT [ "/snapclient.sh" ]
 # Create final server image
 FROM snapcastdeps AS server
 RUN apk add --update --no-cache sox soxr libvorbis opus flac gettext
+COPY --from=librespot /librespot/target/release/librespot /usr/local/bin/librespot
 COPY --from=serverbuild /snapcast/bin/snapserver /usr/local/bin/snapserver
 COPY --from=snapweb /snapweb /usr/share/snapserver/snapweb
 COPY snapserver.conf /etc/snapserver.conf
@@ -59,6 +74,7 @@ ENV 	SNAPSERVER_HTTP_ENABLED=true \
 	SNAPSERVER_DATA_DIR=/var/lib/snapserver \
 	SNAPSERVER_SOURCE=pipe:///snapserver/snapfifo?name=default&mode=read \
 	SNAPSERVER_SOURCE_CREATE_FIFO= \
+	SNAPSERVER_SOURCE_LIBRESPOT_ENABLED=true \
 	SNAPSERVER_SOUND_TEST=false \
 	SNAPSERVER_START_SOUND_ENABLED=true \
 	SNAPSERVER_SAMPLEFORMAT=48000:16:2 \
@@ -71,7 +87,9 @@ RUN adduser -D -H -u 4242 snapserver
 RUN set -ex; \
 	mkdir /data; \
 	chown snapserver:snapserver /data; \
-	chmod 2770 /data
+	chmod 2770 /data; \
+	mkdir -p /home/snapserver/.config/snapserver /var/lib/snapserver; \
+	chown -R snapserver /home/snapserver/.config /var/lib/snapserver
 USER snapserver:snapserver
 COPY snapserver.sh /
 RUN /snapserver.sh --version && rm -rf /tmp/snapserver.conf
