@@ -35,6 +35,6 @@ spec:
     description: |
       Snapserver source URI.
       Examples:
-      * Run a TCP server: tcp://0.0.0.0:1234?name=TCP
-      * Run a TCP client: tcp://mopidy:1234?name=Mopidy&mode=client
+      * Run a TCP server: tcp://0.0.0.0:1709?name=TCP
+      * Run a TCP client: tcp://mopidy:1709?name=Mopidy&mode=client
       For more information, see https://github.com/badaix/snapcast/blob/master/doc/configuration.md#sources

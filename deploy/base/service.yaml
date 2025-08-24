@@ -19,5 +19,9 @@ spec:
     targetPort: 1704
     protocol: TCP
     name: stream
+  - port: 1709
+    targetPort: 1709
+    protocol: TCP
+    name: input
   selector:
     app.kubernetes.io/component: webapp

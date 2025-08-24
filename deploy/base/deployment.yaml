@@ -42,6 +42,7 @@ spec:
         - containerPort: 1780 # kpt-set: ${port}
         - containerPort: 1705
         - containerPort: 1704
+        - containerPort: 1709 # audio input
         livenessProbe:
           httpGet:
             path: "/" # kpt-set: ${healthcheck}
