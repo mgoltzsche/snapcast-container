@@ -27,10 +27,10 @@ spec:
         env:
         - name: SNAPCLIENT_K8S_SERVICE
           value: snapcast
-        - name: SNAPCLIENT_K8S_NAMESPACE
+        - name: SNAPCLIENT_HOSTID
           valueFrom:
             fieldRef:
-              fieldPath: metadata.namespace
+              fieldPath: spec.nodeName
         resources:
           limits:
             cpu: 200m
