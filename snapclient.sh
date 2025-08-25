@@ -2,6 +2,13 @@
 
 set -eu
 
+waitForSnapserver() {
+	while ! timeout 3s nc -z "$SNAPCLIENT_HOST" "$SNAPCLIENT_PORT" 2>/dev/null; do
+		echo "Waiting for Snapserver at $SNAPCLIENT_HOST:$SNAPCLIENT_PORT to become available" >&2
+		sleep 3
+	done
+}
+
 findPulseaudioUser() {
 	for uid in `ls /host/run/user 2>/dev/null || true`; do
 		if [ -S "/host/run/user/${uid}/pulse/native" ]; then
@@ -10,10 +17,6 @@ findPulseaudioUser() {
 		fi
 	done
 }
-
-if [ ! "${SNAPCLIENT_SERVER_URL:-}" ] && [ "${SNAPCLIENT_HOST:-}" ]; then
-	SNAPCLIENT_SERVER_URL="tcp://$SNAPCLIENT_HOST:${SNAPCLIENT_PORT:=1704}"
-fi
 
 if [ "${SNAPCLIENT_HOSTID:-}" ]; then
 	SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --hostID $SNAPCLIENT_HOSTID"
@@ -54,6 +57,12 @@ fi
 
 if [ "${SNAPCLIENT_MIXER:-}" ]; then
 	SNAPCLIENT_OPTS="${SNAPCLIENT_OPTS:-} --mixer $SNAPCLIENT_MIXER"
+fi
+
+if [ ! "${SNAPCLIENT_SERVER_URL:-}" ] && [ "${SNAPCLIENT_HOST:-}" ]; then
+	: ${SNAPCLIENT_PORT:=1704}
+	waitForSnapserver
+	SNAPCLIENT_SERVER_URL="tcp://$SNAPCLIENT_HOST:$SNAPCLIENT_PORT"
 fi
 
 set -x
