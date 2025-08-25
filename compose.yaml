@@ -1,6 +1,5 @@
 volumes:
   snapserver-state:
-
 services:
   snapclient:
     image: ghcr.io/mgoltzsche/snapcast-client:dev

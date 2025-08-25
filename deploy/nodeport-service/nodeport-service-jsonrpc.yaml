@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
-metadata:
+metadata: # kpt-merge: /snapcast-jsonrpc
   name: snapcast-jsonrpc
   annotations:
     kubemate.mgoltzsche.github.com/mdns-service: _snapcast-jsonrpc._tcp, _snapcast-tcp._tcp
     kubemate.mgoltzsche.github.com/mdns-name: snapcast
+    internal.kpt.dev/upstream-identifier: '|Service|default|snapcast-jsonrpc'
 spec:
   type: NodePort
   ports:

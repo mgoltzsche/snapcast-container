@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
-metadata:
+metadata: # kpt-merge: /snapcast-stream
   name: snapcast-stream
   annotations:
     kubemate.mgoltzsche.github.com/mdns-service: _snapcast-stream._tcp, _snapcast._tcp
     kubemate.mgoltzsche.github.com/mdns-name: snapcast
+    internal.kpt.dev/upstream-identifier: '|Service|default|snapcast-stream'
 spec:
   type: NodePort
   ports:
