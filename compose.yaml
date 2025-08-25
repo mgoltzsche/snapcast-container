@@ -1,0 +1,51 @@
+services:
+  snapclient:
+    image: ghcr.io/mgoltzsche/snapcast-client:dev
+    environment:
+      SNAPCLIENT_HOST: 127.0.0.1
+    network_mode: host
+    restart: unless-stopped
+    # Required when using alsa directly (e.g. on a raspberry pi)
+    #privileged: true
+    devices:
+    - "/dev/snd:/dev/snd"
+    volumes:
+    - type: bind
+      source: /run # allow the container to detect whether the pulseaudio unix socket should be used
+      target: /host/run
+    - type: bind
+      source: $HOME/.config/pulse # pass through pulseaudio authentication
+      target: /home/snapclient/.config/pulse
+    - type: bind
+      source: /etc # allow the container to use host's /etc/asound.conf if present
+      target: /host/etc
+      read_only: true
+    user: ${UID:-1000}:${UID:-1000}
+    depends_on:
+    - snapserver
+  snapserver:
+    image: ghcr.io/mgoltzsche/snapcast-server:dev
+    environment:
+      #SNAPSERVER_SOURCE: pipe:///snapserver/snapfifo?name=default&mode=read
+      #SNAPSERVER_SOURCE: tcp://127.0.0.1:1709?name=default
+      SNAPSERVER_BUFFER_MS: "200"
+      SNAPSERVER_INITIAL_VOLUME: "40"
+      # Advertize avahi service
+      DBUS_SYSTEM_BUS_ADDRESS: unix:path=/host/run/dbus/system_bus_socket
+    volumes:
+    - type: bind
+      # allow the container to dynamically select the pulseaudio and dbus unix socket, if supported by the host
+      source: /run
+      target: /host/run
+    network_mode: host
+    #ports:
+    #- "1780:1780"
+    #- "1704:1704"
+    #- "1705:1705"
+    #user: ${UID:-1000}:${UID:-1000} # unprivileged user cannot advertize avahi service
+    user: root:root
+    privileged: true
+    group_add:
+    - 4242
+    - 86
+    restart: unless-stopped
