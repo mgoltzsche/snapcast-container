@@ -6,6 +6,8 @@ metadata: # kpt-merge: /blueprint
     internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|blueprint'
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   progressDeadlineSeconds: 300
   revisionHistoryLimit: 10
   selector:
