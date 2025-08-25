@@ -4,5 +4,6 @@ commonLabels:
   app.kubernetes.io/name: snapcast # kpt-set: ${name}
 resources:
 - serviceaccount.yaml
-- service.yaml
+- persistentvolumeclaim.yaml
 - deployment.yaml
+- service.yaml

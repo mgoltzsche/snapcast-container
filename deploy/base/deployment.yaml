@@ -68,14 +68,9 @@ spec:
           runAsGroup: 4242
           runAsUser: 4242
         volumeMounts:
-        - name: host-tmp
-          mountPath: /host/tmp
         - name: state
           mountPath: /var/lib/snapserver
       volumes:
-      - name: host-tmp
-        hostPath:
-          path: /tmp
-          type: Directory
       - name: state
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: snapserver-state

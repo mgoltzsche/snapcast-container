@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: # kpt-merge: /snapserver-state
+  name: snapserver-state # kpt-set: ${name}-state
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|PersistentVolumeClaim|default|snapserver-state'
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Mi
