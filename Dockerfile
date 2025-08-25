@@ -59,7 +59,8 @@ ENTRYPOINT [ "/snapclient.sh" ]
 # Create final server image
 FROM snapcastdeps AS server
 RUN apk add --update --no-cache sox soxr libvorbis opus flac gettext
-COPY --from=librespot /librespot/target/release/librespot /usr/local/bin/librespot
+COPY --from=librespot /librespot/target/release/librespot /usr/local/bin/librespot.bin
+COPY librespot-wrapper.sh /usr/local/bin/librespot
 COPY --from=serverbuild /snapcast/bin/snapserver /usr/local/bin/snapserver
 COPY --from=snapweb /snapweb /usr/share/snapserver/snapweb
 COPY snapserver.conf /etc/snapserver.conf

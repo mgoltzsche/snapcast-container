@@ -1,4 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- nodeport-service.yaml
+- nodeport-service-jsonrpc.yaml
+- nodeport-service-stream.yaml
+- nodeport-service-librespot.yaml

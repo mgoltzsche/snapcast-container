@@ -27,10 +27,12 @@ spec:
         image: ghcr.io/mgoltzsche/snapcast-server:0.5.1 # kpt-set: ${image}:${version}
         imagePullPolicy: IfNotPresent
         env:
-        - name: SNAPSERVER_SOURCE
-          value: pipe:///host/tmp/snapfifo?name=default&mode=read
-        - name: SNAPSERVER_SOURCE_CREATE_FIFO
-          value: /host/tmp/snapfifo
+        - name: LIBRESPOT_OPTS
+          value: --zeroconf-port=30021
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         resources:
           limits:
             cpu: 200m
@@ -40,9 +42,10 @@ spec:
             memory: 32Mi
         ports:
         - containerPort: 1780 # kpt-set: ${port}
-        - containerPort: 1705
-        - containerPort: 1704
+        - containerPort: 1705 # jsonrpc
+        - containerPort: 1704 # stream
         - containerPort: 1709 # audio input
+        - containerPort: 30021 # librespot
         livenessProbe:
           httpGet:
             path: "/" # kpt-set: ${healthcheck}

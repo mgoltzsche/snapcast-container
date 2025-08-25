@@ -11,10 +11,14 @@ sourceName() {
 if [ ! "${SNAPSERVER_SOURCE_CONFIG:-}" ]; then
 	SNAPSERVER_SOURCE_CONFIG="source = $SNAPSERVER_SOURCE"
 	if [ "${SNAPSERVER_SOURCE_LIBRESPOT_ENABLED:-true}" = true ]; then
+		DEVICE_NAME=Snapcast
+		if [ "${NODE_NAME:-}" ]; then
+			DEVICE_NAME="Snapcast on $NODE_NAME"
+		fi
 		# TODO: limit librespot cache storage size
 		# TODO: remove codec=null to allow selecting sources separately, once the meta source can be default, see https://github.com/badaix/snapcast/issues/1316
 		SNAPSERVER_SOURCE_CONFIG="$SNAPSERVER_SOURCE_CONFIG&codec=null
-source = librespot:///usr/local/bin/librespot?name=LibreSpot&bitrate=320&sampleformat=44100:16:2&devicename=Snapcast&normalize=true&autoplay=true&killall=true&cache=/tmp/librespot-cache&codec=null
+source = librespot:///usr/local/bin/librespot?name=LibreSpot&bitrate=320&sampleformat=44100:16:2&devicename=$DEVICE_NAME&normalize=true&autoplay=true&killall=true&cache=/tmp/librespot-cache&codec=null
 source = meta:///$(sourceName "$SNAPSERVER_SOURCE")/LibreSpot?name=mix
 "
 	fi

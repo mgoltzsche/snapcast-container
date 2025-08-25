@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: snapcast-stream
+  annotations:
+    kubemate.mgoltzsche.github.com/mdns-service: _snapcast-stream._tcp, _snapcast._tcp
+    kubemate.mgoltzsche.github.com/mdns-name: snapcast
+spec:
+  type: NodePort
+  ports:
+  - port: 1704
+    targetPort: 1704
+    nodePort: 31704
+    protocol: TCP
+    name: stream
+  selector:
+    app.kubernetes.io/name: snapcast # kpt-set: ${name}
+    app.kubernetes.io/component: webapp
