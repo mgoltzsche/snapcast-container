@@ -3,16 +3,11 @@ FROM alpine:3.22 AS alpine
 # Build librespot
 FROM rust:1.89-alpine3.22 AS librespot
 RUN apk add --update --no-cache git musl-dev
-#ARG LIBRESPOT_VERSION=v0.6.0
-# Librespot 0.6.0 + patch for breaking spotify change, see https://github.com/librespot-org/librespot/issues/1527#issuecomment-3172534956
-ARG LIBRESPOT_VERSION=03bcdc6bda5f7e2a6c21c3a1576ef00b21ca469c
-RUN set -ex; \
-	git clone -c 'advice.detachedHead=false' https://github.com/librespot-org/librespot; \
-	cd librespot; \
-	git checkout $LIBRESPOT_VERSION
+ARG LIBRESPOT_VERSION=v0.7.1
+RUN git clone -c 'advice.detachedHead=false' --branch=$LIBRESPOT_VERSION --depth=1 https://github.com/librespot-org/librespot
 WORKDIR /librespot
 ENV RUSTFLAGS='-C link-arg=-s'
-RUN cargo build --release --no-default-features --features=with-libmdns
+RUN cargo build --release --no-default-features --features=with-libmdns,rustls-tls-native-roots
 
 # Install build dependencies
 FROM alpine AS builddeps
