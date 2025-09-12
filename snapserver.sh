@@ -19,7 +19,7 @@ if [ ! "${SNAPSERVER_SOURCE_CONFIG:-}" ]; then
 		# TODO: remove codec=null to allow selecting sources separately, once the meta source can be default, see https://github.com/badaix/snapcast/issues/1316
 		SNAPSERVER_SOURCE_CONFIG="$SNAPSERVER_SOURCE_CONFIG&codec=null
 source = librespot:///usr/local/bin/librespot?name=LibreSpot&bitrate=320&sampleformat=44100:16:2&devicename=$DEVICE_NAME&normalize=true&autoplay=true&killall=true&cache=/tmp/librespot-cache&codec=null
-source = meta:///$(sourceName "$SNAPSERVER_SOURCE")/LibreSpot?name=mix
+source = meta:///LibreSpot/$(sourceName "$SNAPSERVER_SOURCE")?name=mix
 "
 	fi
 	export SNAPSERVER_SOURCE_CONFIG
