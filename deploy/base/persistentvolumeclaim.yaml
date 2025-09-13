@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata: # kpt-merge: /snapcast-state
   name: snapcast-state # kpt-set: ${name}-state
   annotations:
-    internal.kpt.dev/upstream-identifier: '|PersistentVolumeClaim|default|snapserver-state'
+    internal.kpt.dev/upstream-identifier: '|PersistentVolumeClaim|default|snapcast-state'
 spec:
   accessModes:
     - ReadWriteOnce
