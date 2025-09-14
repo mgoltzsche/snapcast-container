@@ -1,3 +1,5 @@
+ARG JOBS=1
+
 FROM alpine:3.22 AS alpine
 
 # Build librespot
@@ -6,8 +8,9 @@ RUN apk add --update --no-cache git musl-dev
 ARG LIBRESPOT_VERSION=v0.7.1
 RUN git clone -c 'advice.detachedHead=false' --branch=$LIBRESPOT_VERSION --depth=1 https://github.com/librespot-org/librespot
 WORKDIR /librespot
+ARG JOBS
 ENV RUSTFLAGS='-C link-arg=-s'
-RUN cargo build --release --no-default-features --features=with-libmdns,rustls-tls-native-roots
+RUN cargo build --release --no-default-features --features=with-libmdns,rustls-tls-native-roots -j "$JOBS"
 
 # Install build dependencies
 FROM alpine AS builddeps
@@ -20,12 +23,14 @@ RUN cmake -DBUILD_WITH_PULSE=ON .
 # Build server
 FROM builddeps AS serverbuild
 WORKDIR /snapcast/server
-RUN make
+ARG JOBS
+RUN make -j "$JOBS"
 
 # Build client
 FROM builddeps AS clientbuild
 WORKDIR /snapcast/client
-RUN make
+ARG JOBS
+RUN make -j "$JOBS"
 
 # Download snapweb
 FROM alpine AS snapweb
