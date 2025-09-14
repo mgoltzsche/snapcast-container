@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 1
       containers:
       - name: snapclient
-        image: ghcr.io/mgoltzsche/snapcast-client:0.5.1 # kpt-set: ${client-image}:${version}
+        image: ghcr.io/mgoltzsche/snapcast-client:0.9.1 # kpt-set: ${client-image}:${version}
         env:
         - name: SNAPCLIENT_HOST
           value: snapcast
