@@ -34,7 +34,7 @@ RUN make -j "$JOBS"
 
 # Download snapweb
 FROM alpine AS snapweb
-ARG SNAPWEB_VERSION=v0.9.1
+ARG SNAPWEB_VERSION=v0.9.2
 RUN apk add --update --no-cache unzip
 RUN set -ex; \
 	wget -O /tmp/snapweb.zip https://github.com/badaix/snapweb/releases/download/$SNAPWEB_VERSION/snapweb.zip; \
