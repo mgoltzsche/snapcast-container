@@ -5,7 +5,7 @@ FROM alpine:3.22 AS alpine
 # Build librespot
 FROM rust:1.85-alpine3.21 AS librespot
 RUN apk add --update --no-cache git musl-dev
-ARG LIBRESPOT_VERSION=v0.7.1
+ARG LIBRESPOT_VERSION=v0.8.0
 RUN git clone -c 'advice.detachedHead=false' --branch=$LIBRESPOT_VERSION --depth=1 https://github.com/librespot-org/librespot
 WORKDIR /librespot
 ARG JOBS
