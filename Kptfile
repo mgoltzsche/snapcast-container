@@ -17,10 +17,486 @@ upstreamLock:
     repo: https://github.com/mgoltzsche/kubemate-app-blueprints
     directory: /packages/webapp
     ref: main
-    commit: 704c9388e5e756f2ab03a117cc8280ce209a6c26
+    commit: 87e676c0bde3058fea7b291433014a1bf9f5bb0d
 info:
   description: web application
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.3.0
       configPath: ./setters.yaml
+status:
+  conditions:
+    - type: Rendered
+      status: "True"
+      reason: RenderSuccess
+  renderStatus:
+    mutationSteps:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.3.0
+        exitCode: 0
+        results:
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/app/deployment-patch.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.serviceAccountName
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server:0.5.1"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].image
+              currentValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
+              proposedValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].ports[0].containerPort
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "/"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+              currentValue: /
+              proposedValue: /
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "/"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+              currentValue: /
+              proposedValue: /
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "snapcast-state"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+              currentValue: snapcast-state
+              proposedValue: snapcast-state
+            file:
+              path: deploy/base/deployment.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: kustomize.config.k8s.io/v1beta1
+              kind: Kustomization
+            field:
+              path: commonLabels.app.kubernetes.io/name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base/kustomization.yaml
+          - message: set field value to "snapcast-state"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: PersistentVolumeClaim
+              name: snapcast-state
+            field:
+              path: metadata.name
+              currentValue: snapcast-state
+              proposedValue: snapcast-state
+            file:
+              path: deploy/base/persistentvolumeclaim.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base/service.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast
+            field:
+              path: spec.ports[0].port
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base/service.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast
+            field:
+              path: spec.ports[0].targetPort
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base/service.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: ServiceAccount
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base/serviceaccount.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/deployment-patch.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/ingress-patch.yaml
+          - message: set field value to "snapcast-jsonrpc"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast-jsonrpc
+            field:
+              path: metadata.name
+              currentValue: snapcast-jsonrpc
+              proposedValue: snapcast-jsonrpc
+            file:
+              path: deploy/base_patch/jsonrpc-ingress.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast-jsonrpc
+            field:
+              path: spec.rules[0].http.paths[0].backend.service.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/jsonrpc-ingress.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast-jsonrpc
+            field:
+              path: spec.rules[0].http.paths[0].backend.service.port.number
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base_patch/jsonrpc-ingress.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast-jsonrpc
+            field:
+              path: spec.rules[0].http.paths[1].backend.service.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/jsonrpc-ingress.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast-jsonrpc
+            field:
+              path: spec.rules[0].http.paths[1].backend.service.port.number
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/base_patch/jsonrpc-ingress.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/service-patch.yaml
+          - message: set field value to "snapcast-speaker"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: DaemonSet
+              name: snapcast-speaker
+            field:
+              path: metadata.name
+              currentValue: snapcast-speaker
+              proposedValue: snapcast-speaker
+            file:
+              path: deploy/base_patch/speaker-daemonset.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: DaemonSet
+              name: snapcast-speaker
+            field:
+              path: spec.template.spec.serviceAccountName
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/base_patch/speaker-daemonset.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: Deployment
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/dev/deployment-patch.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast-jsonrpc
+            field:
+              path: spec.selector.app.kubernetes.io/name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/nodeport-service/nodeport-service-jsonrpc.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast-librespot
+            field:
+              path: spec.selector.app.kubernetes.io/name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/nodeport-service/nodeport-service-librespot.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: v1
+              kind: Service
+              name: snapcast-stream
+            field:
+              path: spec.selector.app.kubernetes.io/name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/nodeport-service/nodeport-service-stream.yaml
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client:0.5.1"
+            severity: info
+            resourceRef:
+              apiVersion: apps/v1
+              kind: DaemonSet
+              name: snapcast-client
+            field:
+              path: spec.template.spec.containers[0].image
+              currentValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
+              proposedValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
+            file:
+              path: deploy/snapclient/daemonset.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: kustomize.config.k8s.io/v1beta1
+              kind: Kustomization
+            field:
+              path: commonLabels.app.kubernetes.io/name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/snapclient/kustomization.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: metadata.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/snapclient-ingress/ingress.yaml
+          - message: set field value to "Snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: metadata.annotations.kubemate.mgoltzsche.github.com/nav-title
+              currentValue: Snapcast
+              proposedValue: Snapcast
+            file:
+              path: deploy/snapclient-ingress/ingress.yaml
+          - message: set field value to "/snapcast/"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: spec.rules[0].http.paths[0].path
+              currentValue: /snapcast/
+              proposedValue: /snapcast/
+            file:
+              path: deploy/snapclient-ingress/ingress.yaml
+          - message: set field value to "snapcast"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: spec.rules[0].http.paths[0].backend.service.name
+              currentValue: snapcast
+              proposedValue: snapcast
+            file:
+              path: deploy/snapclient-ingress/ingress.yaml
+          - message: set field value to "1780"
+            severity: info
+            resourceRef:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: snapcast
+            field:
+              path: spec.rules[0].http.paths[0].backend.service.port.number
+              currentValue: "1780"
+              proposedValue: "1780"
+            file:
+              path: deploy/snapclient-ingress/ingress.yaml
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server"
+            severity: info
+            resourceRef:
+              apiVersion: skaffold/v3alpha1
+              kind: Config
+              name: data
+            field:
+              path: build.artifacts[0].image
+              currentValue: ghcr.io/mgoltzsche/snapcast-server
+              proposedValue: ghcr.io/mgoltzsche/snapcast-server
+            file:
+              path: skaffold.yaml
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client"
+            severity: info
+            resourceRef:
+              apiVersion: skaffold/v3alpha1
+              kind: Config
+              name: data
+            field:
+              path: build.artifacts[1].image
+              currentValue: ghcr.io/mgoltzsche/snapcast-client
+              proposedValue: ghcr.io/mgoltzsche/snapcast-client
+            file:
+              path: skaffold.yaml

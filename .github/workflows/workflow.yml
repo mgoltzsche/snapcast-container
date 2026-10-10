@@ -26,20 +26,20 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         persist-credentials: false
 
     - id: release
       name: Prepare release
-      uses: mgoltzsche/conventional-release@v0
+      uses: mgoltzsche/conventional-release@v2
       with:
-        commit-files: deploy setters.yaml
+        commit-files: deploy setters.yaml Kptfile
         ignore-commits-before: 31ba691532914543623b38cab640e64ab1a77d29
 
     - name: Set up qemu
-      uses: docker/setup-qemu-action@v3
+      uses: docker/setup-qemu-action@v4
       with:
         platforms: all
 
@@ -63,5 +63,4 @@ jobs:
       run: |
         set -u
         make manifest-image VERSION=$RELEASE_VERSION
-
 

@@ -2,8 +2,9 @@
 # This file is maintained within the upstream kpt package (see Kptfile).
 # Committing manual changes to this file, disables blueprint updates.
 
-KPT_IMAGE ?= mgoltzsche/kpt-docker:1.0.0-beta.32
+KPT_IMAGE ?= ghcr.io/kptdev/kpt:v1.0.1
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
+YQ_IMAGE ?= mikefarah/yq:4.54.1
 SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.16.1
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
@@ -90,7 +91,7 @@ manifest-image: set-version render
 
 .PHONY: set-version
 set-version: require-version
-	$(DOCKER) run --rm -v "$$PWD":/workdir -u "`id -u`:`id -g`" -e VERSION mikefarah/yq:4.29.2 -i '.data.version = env(VERSION)' setters.yaml
+	$(DOCKER) run --rm -v "$$PWD":/workdir -u "`id -u`:`id -g`" -e VERSION $(YQ_IMAGE) -i '.data.version = env(VERSION)' setters.yaml
 
 .PHONY: require-version
 require-version:
