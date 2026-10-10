@@ -1,6 +1,6 @@
 ARG JOBS=1
 
-FROM alpine:3.22 AS alpine
+FROM alpine:3.24 AS alpine
 
 # Build librespot
 FROM rust:1.91-alpine3.22 AS librespot
