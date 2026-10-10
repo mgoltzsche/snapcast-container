@@ -15,7 +15,7 @@ RUN cargo build --release --no-default-features --features=with-libmdns,rustls-t
 # Install build dependencies
 FROM alpine AS builddeps
 RUN apk add --update --no-cache git cmake make bash gcc g++ musl-dev avahi-dev openssl-dev alsa-lib-dev pulseaudio-dev libvorbis-dev opus-dev flac-dev soxr-dev boost-dev expat-dev
-ARG SNAPCAST_VERSION=v0.34.0
+ARG SNAPCAST_VERSION=v0.35.0
 RUN git clone -c 'advice.detachedHead=false' --depth=1 --branch=${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git /snapcast
 WORKDIR /snapcast
 RUN cmake -DBUILD_WITH_PULSE=ON .
@@ -34,7 +34,7 @@ RUN make -j "$JOBS"
 
 # Download snapweb
 FROM alpine AS snapweb
-ARG SNAPWEB_VERSION=v0.9.2
+ARG SNAPWEB_VERSION=v0.9.3
 RUN apk add --update --no-cache unzip
 RUN set -ex; \
 	wget -O /tmp/snapweb.zip https://github.com/badaix/snapweb/releases/download/$SNAPWEB_VERSION/snapweb.zip; \
