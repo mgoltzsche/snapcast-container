@@ -70,7 +70,7 @@ status:
               proposedValue: snapcast
             file:
               path: deploy/base/deployment.yaml
-          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server:0.5.1"
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server:0.11.0"
             severity: info
             resourceRef:
               apiVersion: apps/v1
@@ -78,8 +78,8 @@ status:
               name: snapcast
             field:
               path: spec.template.spec.containers[0].image
-              currentValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
-              proposedValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
+              currentValue: ghcr.io/mgoltzsche/snapcast-server:0.11.0
+              proposedValue: ghcr.io/mgoltzsche/snapcast-server:0.11.0
             file:
               path: deploy/base/deployment.yaml
           - message: set field value to "1780"
@@ -236,126 +236,6 @@ status:
               currentValue: snapcast
               proposedValue: snapcast
             file:
-              path: deploy/base_patch/deployment-patch.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast
-            field:
-              path: metadata.name
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
-              path: deploy/base_patch/ingress-patch.yaml
-          - message: set field value to "snapcast-jsonrpc"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast-jsonrpc
-            field:
-              path: metadata.name
-              currentValue: snapcast-jsonrpc
-              proposedValue: snapcast-jsonrpc
-            file:
-              path: deploy/base_patch/jsonrpc-ingress.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast-jsonrpc
-            field:
-              path: spec.rules[0].http.paths[0].backend.service.name
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
-              path: deploy/base_patch/jsonrpc-ingress.yaml
-          - message: set field value to "1780"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast-jsonrpc
-            field:
-              path: spec.rules[0].http.paths[0].backend.service.port.number
-              currentValue: "1780"
-              proposedValue: "1780"
-            file:
-              path: deploy/base_patch/jsonrpc-ingress.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast-jsonrpc
-            field:
-              path: spec.rules[0].http.paths[1].backend.service.name
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
-              path: deploy/base_patch/jsonrpc-ingress.yaml
-          - message: set field value to "1780"
-            severity: info
-            resourceRef:
-              apiVersion: networking.k8s.io/v1
-              kind: Ingress
-              name: snapcast-jsonrpc
-            field:
-              path: spec.rules[0].http.paths[1].backend.service.port.number
-              currentValue: "1780"
-              proposedValue: "1780"
-            file:
-              path: deploy/base_patch/jsonrpc-ingress.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: v1
-              kind: Service
-              name: snapcast
-            field:
-              path: metadata.name
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
-              path: deploy/base_patch/service-patch.yaml
-          - message: set field value to "snapcast-speaker"
-            severity: info
-            resourceRef:
-              apiVersion: apps/v1
-              kind: DaemonSet
-              name: snapcast-speaker
-            field:
-              path: metadata.name
-              currentValue: snapcast-speaker
-              proposedValue: snapcast-speaker
-            file:
-              path: deploy/base_patch/speaker-daemonset.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: apps/v1
-              kind: DaemonSet
-              name: snapcast-speaker
-            field:
-              path: spec.template.spec.serviceAccountName
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
-              path: deploy/base_patch/speaker-daemonset.yaml
-          - message: set field value to "snapcast"
-            severity: info
-            resourceRef:
-              apiVersion: apps/v1
-              kind: Deployment
-              name: snapcast
-            field:
-              path: metadata.name
-              currentValue: snapcast
-              proposedValue: snapcast
-            file:
               path: deploy/dev/deployment-patch.yaml
           - message: set field value to "snapcast"
             severity: info
@@ -393,7 +273,7 @@ status:
               proposedValue: snapcast
             file:
               path: deploy/nodeport-service/nodeport-service-stream.yaml
-          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client:0.5.1"
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client:0.11.0"
             severity: info
             resourceRef:
               apiVersion: apps/v1
@@ -401,8 +281,8 @@ status:
               name: snapcast-client
             field:
               path: spec.template.spec.containers[0].image
-              currentValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
-              proposedValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
+              currentValue: ghcr.io/mgoltzsche/snapcast-client:0.11.0
+              proposedValue: ghcr.io/mgoltzsche/snapcast-client:0.11.0
             file:
               path: deploy/snapclient/daemonset.yaml
           - message: set field value to "snapcast"
