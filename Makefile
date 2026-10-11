@@ -5,7 +5,7 @@
 KPT_IMAGE ?= ghcr.io/kptdev/kpt:v1.0.1
 KPT_PKG_UPDATE_STRATEGY ?= resource-merge
 YQ_IMAGE ?= mikefarah/yq:4.54.1
-SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.16.1
+SKAFFOLD_IMAGE ?= gcr.io/k8s-skaffold/skaffold:v2.25.0
 SKAFFOLD_OPTS ?=
 KUBECONFIG ?= $$HOME/.kube/config
 
@@ -64,7 +64,7 @@ skaffold-run skaffold-stop skaffold-build skaffold-dev skaffold-delete skaffold-
 		--mount "type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock" \
 		--mount "type=bind,src=$$HOME/.docker,dst=/tmp/.docker" \
 		-e HOME=/tmp \
-		$(SKAFFOLD_IMAGE) skaffold $* $(SKAFFOLD_OPTS)
+		$(SKAFFOLD_IMAGE) skaffold --interactive=false --update-check=false $* $(SKAFFOLD_OPTS)
 
 .PHONY: help
 help: ## Display this help.

@@ -17,7 +17,7 @@ upstreamLock:
     repo: https://github.com/mgoltzsche/kubemate-app-blueprints
     directory: /packages/webapp
     ref: main
-    commit: 87e676c0bde3058fea7b291433014a1bf9f5bb0d
+    commit: b430c96e9c6d67f1147b784913a9e48d200c3a4f
 info:
   description: web application
 pipeline:
@@ -479,7 +479,7 @@ status:
           - message: set field value to "ghcr.io/mgoltzsche/snapcast-server"
             severity: info
             resourceRef:
-              apiVersion: skaffold/v3alpha1
+              apiVersion: skaffold/v4beta14
               kind: Config
               name: data
             field:
@@ -491,7 +491,7 @@ status:
           - message: set field value to "ghcr.io/mgoltzsche/snapcast-client"
             severity: info
             resourceRef:
-              apiVersion: skaffold/v3alpha1
+              apiVersion: skaffold/v4beta14
               kind: Config
               name: data
             field:
