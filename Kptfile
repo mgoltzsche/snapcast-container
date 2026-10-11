@@ -70,7 +70,7 @@ status:
               proposedValue: snapcast
             file:
               path: deploy/base/deployment.yaml
-          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server:0.5.1"
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-server:0.0.0-dev"
             severity: info
             resourceRef:
               apiVersion: apps/v1
@@ -78,8 +78,8 @@ status:
               name: snapcast
             field:
               path: spec.template.spec.containers[0].image
-              currentValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
-              proposedValue: ghcr.io/mgoltzsche/snapcast-server:0.5.1
+              currentValue: ghcr.io/mgoltzsche/snapcast-server:0.0.0-dev
+              proposedValue: ghcr.io/mgoltzsche/snapcast-server:0.0.0-dev
             file:
               path: deploy/base/deployment.yaml
           - message: set field value to "1780"
@@ -393,7 +393,7 @@ status:
               proposedValue: snapcast
             file:
               path: deploy/nodeport-service/nodeport-service-stream.yaml
-          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client:0.5.1"
+          - message: set field value to "ghcr.io/mgoltzsche/snapcast-client:0.0.0-dev"
             severity: info
             resourceRef:
               apiVersion: apps/v1
@@ -401,8 +401,8 @@ status:
               name: snapcast-client
             field:
               path: spec.template.spec.containers[0].image
-              currentValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
-              proposedValue: ghcr.io/mgoltzsche/snapcast-client:0.5.1
+              currentValue: ghcr.io/mgoltzsche/snapcast-client:0.0.0-dev
+              proposedValue: ghcr.io/mgoltzsche/snapcast-client:0.0.0-dev
             file:
               path: deploy/snapclient/daemonset.yaml
           - message: set field value to "snapcast"
